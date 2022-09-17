@@ -23,6 +23,7 @@ Supported formats
 -----------------
 *   TCP
 *   Serial (RTU, ASCII)
+*   Encapsulated RTU over TCP
 
 Usage
 -----
@@ -41,19 +42,21 @@ results, err = client.ReadCoils(2, 1)
 
 Advanced usage:
 ```go
+
+slaveId := 0x01
+
 // Modbus TCP
 handler := modbus.NewTCPClientHandler("localhost:502")
 handler.Timeout = 10 * time.Second
-handler.SlaveId = 0xFF
 handler.Logger = log.New(os.Stdout, "test: ", log.LstdFlags)
 // Connect manually so that multiple requests are handled in one connection session
 err := handler.Connect()
 defer handler.Close()
 
 client := modbus.NewClient(handler)
-results, err := client.ReadDiscreteInputs(15, 2)
-results, err = client.WriteMultipleRegisters(1, 2, []byte{0, 3, 0, 4})
-results, err = client.WriteMultipleCoils(5, 10, []byte{4, 3})
+results, err := client.ReadDiscreteInputs(slaveId, 15, 2)
+results, err = client.WriteMultipleRegisters(slaveId, 1, 2, []byte{0, 3, 0, 4})
+results, err = client.WriteMultipleCoils(slaveId, 5, 10, []byte{4, 3})
 ```
 
 ```go
@@ -70,7 +73,17 @@ err := handler.Connect()
 defer handler.Close()
 
 client := modbus.NewClient(handler)
-results, err := client.ReadDiscreteInputs(15, 2)
+results, err := client.ReadDiscreteInputs(slaveId, 15, 2)
+```
+
+```go
+// Modbus Encapsulated RTU over TCP
+handler := modbus.NewEncClientHandler("gateway:20108")
+err := handler.Connect()
+defer handler.Close()
+
+client := modbus.NewClient(handler)
+results, err := client.ReadDiscreteInputs(slaveId, 15, 2)
 ```
 
 References
