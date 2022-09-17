@@ -29,15 +29,21 @@ Usage
 -----
 Basic usage:
 ```go
+slaveId := 0x01
+
 // Modbus TCP
 client := modbus.TCPClient("localhost:502")
 // Read input register 9
-results, err := client.ReadInputRegisters(8, 1)
+results, err := client.ReadInputRegisters(slaveId, 8, 1)
 
 // Modbus RTU/ASCII
 // Default configuration is 19200, 8, 1, even
 client = modbus.RTUClient("/dev/ttyS0")
-results, err = client.ReadCoils(2, 1)
+results, err = client.ReadCoils(slaveId, 2, 1)
+
+// Modbus Encapsulated RTU over TCP
+client = modbus.EncClient("gateway:20108")
+results, err = client.ReadCoils(slaveId, 2, 1)
 ```
 
 Advanced usage:
