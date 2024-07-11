@@ -42,7 +42,7 @@ const (
 
 const (
 	SlaveIdMin = 1
-	SlaveIdMax = 247
+	SlaveIdMax = 255
 )
 
 // ModbusError implements error interface.
